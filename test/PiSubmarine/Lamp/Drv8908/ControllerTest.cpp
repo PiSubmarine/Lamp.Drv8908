@@ -1,7 +1,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "PiSubmarine/Drv8908/IDevice.h"
+#include "PiSubmarine/Drv8908/IDriverMock.h"
 #include "PiSubmarine/Drv8908/IPowerManager.h"
 #include "PiSubmarine/Lamp/Drv8908/Controller.h"
 #include "PiSubmarine/RegUtils.h"
@@ -10,51 +10,6 @@ namespace PiSubmarine::Lamp::Drv8908
 {
     namespace
     {
-        class IDeviceMock : public PiSubmarine::Drv8908::IDevice
-        {
-        public:
-            MOCK_METHOD(void, SetSleeping, (bool sleepEnabled), (const, override));
-            MOCK_METHOD(bool, IsSleeping, (), (const, override));
-            MOCK_METHOD(bool, HasFault, (), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetStatus, (PiSubmarine::Drv8908::IcStatus& icStat), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetOpenLoadStatus, (PiSubmarine::Drv8908::OpenLoadStatus& ovp), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetOvercurrentStatus, (PiSubmarine::Drv8908::OverCurrentStatus& ovp), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetConfigCtrl, (PiSubmarine::Drv8908::ConfigCtrl& outConfigCtr), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetConfigCtrl, (const PiSubmarine::Drv8908::ConfigCtrl& inConfigCtr), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, IsHalfBridgeEnabled, (PiSubmarine::Drv8908::HalfBridge hb, bool& high, bool& low), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetHalfBridgeEnabled, (PiSubmarine::Drv8908::HalfBridge hb, bool high, bool low), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetHalfBridgeEnabled, (PiSubmarine::Drv8908::HalfBridgeBitMask hBridges, bool high, bool low), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetPwmFrequency, (PiSubmarine::Drv8908::PwmGeneratorBitMask generator, PiSubmarine::Drv8908::PwmFrequency freq), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetPwmFrequency, (PiSubmarine::Drv8908::PwmGenerator generator, PiSubmarine::Drv8908::PwmFrequency freq), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetPwmFrequency, (PiSubmarine::Drv8908::PwmGenerator generator, PiSubmarine::Drv8908::PwmFrequency& freq), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetPwmMap, (PiSubmarine::Drv8908::HalfBridge hb, PiSubmarine::Drv8908::PwmGenerator generator), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetPwmMap, (PiSubmarine::Drv8908::HalfBridgeBitMask hbMask, PiSubmarine::Drv8908::PwmGenerator generator), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetPwmMap, (PiSubmarine::Drv8908::HalfBridge hb, PiSubmarine::Drv8908::PwmGenerator& generator), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetDutyCycle, (PiSubmarine::Drv8908::PwmGenerator generator, NormalizedIntFraction<8>& value), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetDutyCycle, (PiSubmarine::Drv8908::PwmGeneratorBitMask generator, NormalizedIntFraction<8> value), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetDutyCycle, (PiSubmarine::Drv8908::PwmGenerator generator, NormalizedIntFraction<8> value), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetHalfBridgePwmModes, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetHalfBridgePwmModes, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetHalfBridgeActiveFreeWheeling, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetHalfBridgeActiveFreeWheeling, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetHalfBridgeFastSlewRate, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetHalfBridgeFastSlewRate, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetEnabledPwmGenerators, (PiSubmarine::Drv8908::PwmGeneratorBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetEnabledPwmGenerators, (PiSubmarine::Drv8908::PwmGeneratorBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetEnabledOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetEnabledOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetOpenLoadDetectControl2, (const PiSubmarine::Drv8908::OpenLoadDetectControl& value), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetOpenLoadDetectControl2, (PiSubmarine::Drv8908::OpenLoadDetectControl& value), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, SetOpenLoadDetectControl3, (PiSubmarine::Drv8908::OcpDeglitchTime deglitchTime, bool negativeCurrentOldEnabled), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetOpenLoadDetectControl3, (PiSubmarine::Drv8908::OcpDeglitchTime& deglitchTime, bool& negativeCurrentOldEnabled), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, EnableLowCurrentOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetEnabledLowCurrentOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, EnablePassiveOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetEnabledPassiveOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, EnablePassiveVmOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask channelMask), (const, override));
-            MOCK_METHOD(PiSubmarine::Drv8908::IcStatus, GetEnabledPassiveVmOpenLoadDetect, (PiSubmarine::Drv8908::HalfBridgeBitMask& channels), (const, override));
-        };
-
         class TestPowerManager : public PiSubmarine::Drv8908::IPowerManager
         {
         public:
@@ -81,7 +36,7 @@ namespace PiSubmarine::Lamp::Drv8908
         }
 
         void PrepareSuccessfulConfigurationDefaults(
-            testing::NiceMock<IDeviceMock>& chip,
+            testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock>& chip,
             const PiSubmarine::Drv8908::PwmGeneratorBitMask existingGenerators = static_cast<PiSubmarine::Drv8908::PwmGeneratorBitMask>(0),
             const PiSubmarine::Drv8908::HalfBridgeBitMask existingPwmModes = static_cast<PiSubmarine::Drv8908::HalfBridgeBitMask>(0),
             const PiSubmarine::Drv8908::HalfBridgeBitMask existingActiveFreeWheeling = static_cast<PiSubmarine::Drv8908::HalfBridgeBitMask>(0),
@@ -199,7 +154,7 @@ namespace PiSubmarine::Lamp::Drv8908
     {
         using namespace PiSubmarine::RegUtils;
 
-        testing::NiceMock<IDeviceMock> chip;
+        testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
         TestPowerManager powerManager;
         PrepareSuccessfulConfigurationDefaults(
             chip,
@@ -245,7 +200,7 @@ namespace PiSubmarine::Lamp::Drv8908
     {
         using namespace PiSubmarine::RegUtils;
 
-        testing::NiceMock<IDeviceMock> chip;
+        testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
         TestPowerManager powerManager;
         Config config;
         config.EnableLowCurrentOpenLoadDetection = true;
@@ -301,7 +256,7 @@ namespace PiSubmarine::Lamp::Drv8908
 
     TEST(ControllerTest, SettingZeroIntensityReleasesPowerLease)
     {
-        testing::NiceMock<IDeviceMock> chip;
+        testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
         TestPowerManager powerManager;
         PrepareSuccessfulConfigurationDefaults(chip);
 
@@ -320,7 +275,7 @@ namespace PiSubmarine::Lamp::Drv8908
 
     TEST(ControllerTest, RejectsLowCurrentOpenLoadDetectionForHighSideLamp)
     {
-        testing::NiceMock<IDeviceMock> chip;
+        testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
         TestPowerManager powerManager;
         Config config;
         config.EnableLowCurrentOpenLoadDetection = true;

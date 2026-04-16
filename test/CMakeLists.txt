@@ -15,6 +15,7 @@ add_executable(${PISUBMARINE_MODULE_NAME}.Test ${${PISUBMARINE_MODULE_NAME}.Test
 PiSubmarineInitTarget(${PISUBMARINE_MODULE_NAME}.Test)
 
 target_link_libraries(${PISUBMARINE_MODULE_NAME}.Test PRIVATE ${PISUBMARINE_MODULE_NAME})
+target_link_libraries(${PISUBMARINE_MODULE_NAME}.Test PRIVATE PiSubmarine.Drv8908.Mock)
 target_link_libraries(${PISUBMARINE_MODULE_NAME}.Test PRIVATE GTest::gmock_main)
 include(GoogleTest)
 gtest_discover_tests(${PISUBMARINE_MODULE_NAME}.Test)
