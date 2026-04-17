@@ -1,6 +1,12 @@
 {
   "dependencies": [
     "spdlog",
-    "gtest"
+    "gtest",
+    "boost-program-options",
+    {
+      "name": "libgpiod",
+      "default-features": false,
+      "features": [ "cxx-bindings" ]
+    }
   ]
 }

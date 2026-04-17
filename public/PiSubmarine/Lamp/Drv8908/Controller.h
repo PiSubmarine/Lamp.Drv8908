@@ -27,6 +27,8 @@ namespace PiSubmarine::Lamp::Drv8908
 
         Error::Api::Result<void> SetIntensity(NormalizedFraction intensity) override;
         [[nodiscard]] Error::Api::Result<NormalizedFraction> GetIntensity() const override;
+        Error::Api::Result<void> SetPwmFrequency(PiSubmarine::Drv8908::PwmFrequency pwmFrequency);
+        [[nodiscard]] Error::Api::Result<PiSubmarine::Drv8908::PwmFrequency> GetPwmFrequency() const;
         [[nodiscard]] Error::Api::Result<Lamp::Telemetry::Api::Status> GetStatus() const override;
 
     private:

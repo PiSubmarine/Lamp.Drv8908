@@ -155,6 +155,28 @@ namespace PiSubmarine::Lamp::Drv8908
         return m_TargetIntensity;
     }
 
+    Result<void> Controller::SetPwmFrequency(const PiSubmarine::Drv8908::PwmFrequency pwmFrequency)
+    {
+        m_Config.PwmFrequency = pwmFrequency;
+
+        if (!m_PowerLease.IsValid())
+        {
+            return {};
+        }
+
+        if (!PiSubmarine::Drv8908::IsValid(m_Chip.SetPwmFrequency(m_PwmGenerator, pwmFrequency)))
+        {
+            return MakeCommunicationError();
+        }
+
+        return {};
+    }
+
+    Result<PiSubmarine::Drv8908::PwmFrequency> Controller::GetPwmFrequency() const
+    {
+        return m_Config.PwmFrequency;
+    }
+
     Result<Lamp::Telemetry::Api::Status> Controller::GetStatus() const
     {
         Lamp::Telemetry::Api::Status status{};

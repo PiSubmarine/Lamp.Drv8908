@@ -254,6 +254,57 @@ namespace PiSubmarine::Lamp::Drv8908
         EXPECT_FALSE(statusResult->HasOvertemperatureShutdownFault);
     }
 
+    TEST(ControllerTest, SetPwmFrequencyStoresRequestedValueWhileLampIsOff)
+    {
+        testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
+        TestPowerManager powerManager;
+
+        Controller controller(
+            chip,
+            powerManager,
+            PiSubmarine::Drv8908::PwmGenerator::PwmGenerator4,
+            PiSubmarine::Drv8908::HalfBridgeBitMask::HalfBridge4,
+            SwitchSide::High);
+
+        const auto setResult = controller.SetPwmFrequency(PiSubmarine::Drv8908::PwmFrequency::Hz200);
+        const auto getResult = controller.GetPwmFrequency();
+
+        EXPECT_TRUE(setResult.has_value());
+        ASSERT_TRUE(getResult.has_value());
+        EXPECT_EQ(getResult.value(), PiSubmarine::Drv8908::PwmFrequency::Hz200);
+        EXPECT_EQ(powerManager.AcquireCount, 0);
+        EXPECT_EQ(powerManager.ReleaseCount, 0);
+    }
+
+    TEST(ControllerTest, SetPwmFrequencyAppliesImmediatelyWhenLampIsPowered)
+    {
+        testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
+        TestPowerManager powerManager;
+        PrepareSuccessfulConfigurationDefaults(chip);
+
+        Controller controller(
+            chip,
+            powerManager,
+            PiSubmarine::Drv8908::PwmGenerator::PwmGenerator7,
+            PiSubmarine::Drv8908::HalfBridgeBitMask::HalfBridge7,
+            SwitchSide::High);
+
+        ASSERT_TRUE(controller.SetIntensity(NormalizedFraction(0.5)).has_value());
+
+        EXPECT_CALL(chip, SetPwmFrequency(
+            PiSubmarine::Drv8908::PwmGenerator::PwmGenerator7,
+            PiSubmarine::Drv8908::PwmFrequency::Hz100));
+
+        const auto setResult = controller.SetPwmFrequency(PiSubmarine::Drv8908::PwmFrequency::Hz100);
+        const auto getResult = controller.GetPwmFrequency();
+
+        EXPECT_TRUE(setResult.has_value());
+        ASSERT_TRUE(getResult.has_value());
+        EXPECT_EQ(getResult.value(), PiSubmarine::Drv8908::PwmFrequency::Hz100);
+        EXPECT_EQ(powerManager.AcquireCount, 1);
+        EXPECT_EQ(powerManager.ReleaseCount, 0);
+    }
+
     TEST(ControllerTest, SettingZeroIntensityReleasesPowerLease)
     {
         testing::NiceMock<PiSubmarine::Drv8908::IDeviceMock> chip;
