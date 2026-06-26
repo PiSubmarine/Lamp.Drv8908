@@ -21,8 +21,16 @@ namespace PiSubmarine::Lamp::Drv8908
             PiSubmarine::Drv8908::IPowerManager& powerManager,
             PiSubmarine::Drv8908::PwmGenerator pwmGenerator,
             PiSubmarine::Drv8908::HalfBridgeBitMask halfBridges,
+            SwitchSide switchSide
+        );
+
+        Controller(
+            PiSubmarine::Drv8908::IDevice& chip,
+            PiSubmarine::Drv8908::IPowerManager& powerManager,
+            PiSubmarine::Drv8908::PwmGenerator pwmGenerator,
+            PiSubmarine::Drv8908::HalfBridgeBitMask halfBridges,
             SwitchSide switchSide,
-            Config config = {}
+            Config config
         );
 
         Error::Api::Result<void> SetIntensity(NormalizedFraction intensity) override;

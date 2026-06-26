@@ -122,6 +122,16 @@ namespace PiSubmarine::Lamp::Drv8908
         PiSubmarine::Drv8908::IPowerManager& powerManager,
         PiSubmarine::Drv8908::PwmGenerator pwmGenerator,
         PiSubmarine::Drv8908::HalfBridgeBitMask halfBridges,
+        const SwitchSide switchSide) :
+        Controller(chip, powerManager, pwmGenerator, halfBridges, switchSide, Config{})
+    {
+    }
+
+    Controller::Controller(
+        PiSubmarine::Drv8908::IDevice& chip,
+        PiSubmarine::Drv8908::IPowerManager& powerManager,
+        PiSubmarine::Drv8908::PwmGenerator pwmGenerator,
+        PiSubmarine::Drv8908::HalfBridgeBitMask halfBridges,
         SwitchSide switchSide,
         Config config) :
         m_Chip(chip),
