@@ -86,7 +86,7 @@ namespace PiSubmarine::Lamp::Drv8908
     [[nodiscard]] std::string SummarizeStatus(const Lamp::Telemetry::Api::Status& status)
     {
         std::ostringstream stream;
-        stream << "active=" << (status.IsActive ? "true" : "false")
+        stream << "intensity=" << status.Intensity
                << ", faults=["
                << (status.HasOpenLoadFault ? "open-load " : "")
                << (status.HasOvercurrentFault ? "overcurrent " : "")

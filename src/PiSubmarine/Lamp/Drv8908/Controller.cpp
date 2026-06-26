@@ -180,7 +180,6 @@ namespace PiSubmarine::Lamp::Drv8908
     Result<Lamp::Telemetry::Api::Status> Controller::GetStatus() const
     {
         Lamp::Telemetry::Api::Status status{};
-        status.IsActive = m_PowerLease.IsValid() && !IsZero(m_TargetIntensity);
 
         if (!m_PowerLease.IsValid())
         {
